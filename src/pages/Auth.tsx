@@ -73,12 +73,12 @@ const Auth: React.FC = () => {
           // Auto-confirmed, log them in
           const loginSuccess = await login(formData.email, formData.password);
           if (loginSuccess) {
-            addNotification({
-              type: 'success',
-              message: 'Account created successfully! Welcome to ShareHub.'
-            });
-          }
+          addNotification({
+            type: 'success',
+            message: 'Account created successfully! Welcome to ShareHub.'
+          });
         }
+      }
       }
     } catch (error: any) {
       console.error('Auth error:', error);
