@@ -21,7 +21,7 @@ import Loader from '../components/Loader';
 
 const Claims: React.FC = () => {
   const { user } = useAuth();
-  const { showNotification } = useNotification();
+  const { addNotification } = useNotification();
   const [loading, setLoading] = useState(true);
   const [claims, setClaims] = useState<(Claim & { listing: Listing })[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'completed' | 'cancelled'>('all');
@@ -94,7 +94,10 @@ const Claims: React.FC = () => {
       setClaims(mockClaims);
     } catch (error) {
       console.error('Failed to load claims:', error);
-      showNotification('Failed to load claims', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to load claims'
+      });
     } finally {
       setLoading(false);
     }
@@ -110,10 +113,16 @@ const Claims: React.FC = () => {
       setClaims(prev => prev.map(claim => 
         claim.id === claimId ? { ...claim, status: 'cancelled' as const } : claim
       ));
-      showNotification('Claim cancelled successfully', 'success');
+      addNotification({
+        type: 'success',
+        message: 'Claim cancelled successfully'
+      });
     } catch (error) {
       console.error('Failed to cancel claim:', error);
-      showNotification('Failed to cancel claim', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to cancel claim'
+      });
     }
   };
 
@@ -122,10 +131,16 @@ const Claims: React.FC = () => {
       setClaims(prev => prev.map(claim => 
         claim.id === claimId ? { ...claim, status: 'completed' as const } : claim
       ));
-      showNotification('Claim marked as completed!', 'success');
+      addNotification({
+        type: 'success',
+        message: 'Claim marked as completed!'
+      });
     } catch (error) {
       console.error('Failed to mark claim as completed:', error);
-      showNotification('Failed to update claim status', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to update claim status'
+      });
     }
   };
 

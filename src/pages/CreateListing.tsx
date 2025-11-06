@@ -10,7 +10,7 @@ import Loader from '../components/Loader';
 const CreateListing: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { showNotification } = useNotification();
+  const { addNotification } = useNotification();
   
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -56,7 +56,10 @@ const CreateListing: React.FC = () => {
     if (!user) return;
     
     if (!formData.title.trim() || !formData.description.trim()) {
-      showNotification('Please fill in all required fields', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Please fill in all required fields'
+      });
       return;
     }
 
@@ -71,11 +74,17 @@ const CreateListing: React.FC = () => {
         image: formData.image
       });
 
-      showNotification('Listing created successfully!', 'success');
+      addNotification({
+        type: 'success',
+        message: 'Listing created successfully!'
+      });
       navigate('/dashboard');
     } catch (error) {
       console.error('Create listing error:', error);
-      showNotification('Failed to create listing. Please try again.', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to create listing. Please try again.'
+      });
     } finally {
       setLoading(false);
     }

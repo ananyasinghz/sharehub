@@ -10,7 +10,7 @@ import ListingCard from '../components/ListingCard';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { showNotification } = useNotification();
+  const { addNotification } = useNotification();
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'profile' | 'listings' | 'claims'>('profile');
   const [userListings, setUserListings] = useState<Listing[]>([]);
@@ -34,7 +34,9 @@ const Dashboard: React.FC = () => {
     setLoading(true);
     try {
       // Load user's listings
-      const listings = await listingService.getUserListings(user.id);
+      const listingsResponse = await listingService.getUserListings(user.id);
+      // Ensure we have an array
+      const listings = Array.isArray(listingsResponse) ? listingsResponse : [];
       setUserListings(listings);
       
       // Load user's claims (mock for now)
@@ -50,7 +52,10 @@ const Dashboard: React.FC = () => {
       });
     } catch (error) {
       console.error('Failed to load user data:', error);
-      showNotification('Failed to load dashboard data', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to load dashboard data'
+      });
     } finally {
       setLoading(false);
     }
@@ -64,10 +69,16 @@ const Dashboard: React.FC = () => {
     try {
       await listingService.deleteListing(listingId);
       setUserListings(prev => prev.filter(l => l.id !== listingId));
-      showNotification('Listing deleted successfully', 'success');
+      addNotification({
+        type: 'success',
+        message: 'Listing deleted successfully'
+      });
     } catch (error) {
       console.error('Failed to delete listing:', error);
-      showNotification('Failed to delete listing', 'error');
+      addNotification({
+        type: 'error',
+        message: 'Failed to delete listing'
+      });
     }
   };
 

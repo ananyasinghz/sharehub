@@ -124,8 +124,9 @@ class AuthService {
         options: {
           userAttributes: {
             email,
-            name,
-            'custom:campus': campus
+            name
+            // Temporarily disabled: 'custom:campus': campus
+            // You need to add 'campus' as a custom attribute in AWS Cognito User Pool
           }
         }
       };
@@ -162,7 +163,7 @@ class AuthService {
   /**
    * Confirm sign up with verification code
    */
-  async confirmSignUp(email: string, confirmationCode: string): Promise<User> {
+  async confirmSignUp(email: string, confirmationCode: string): Promise<boolean> {
     try {
       const { isSignUpComplete } = await confirmSignUp({
         username: email,
@@ -173,14 +174,8 @@ class AuthService {
         throw new Error('Email confirmation failed');
       }
 
-      // Auto sign in after confirmation
-      // Note: You might want to require manual sign in instead
-      const user = await this.getCurrentUser();
-      if (!user) {
-        throw new Error('Please sign in with your confirmed credentials');
-      }
-
-      return user;
+      // Return success - user can now sign in
+      return true;
     } catch (error: any) {
       console.error('Confirm signup error:', error);
       
