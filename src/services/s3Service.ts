@@ -138,12 +138,13 @@ class S3Service {
         }
       }).result;
 
-      // For public files, construct the direct URL
-      return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
+      // For public files, construct the direct URL with 'public/' prefix
+      // Amplify Storage with level: 'public' adds 'public/' prefix
+      return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/public/${key}`;
     } catch (error) {
       console.error('Error getting file URL:', error);
-      // Return a fallback public URL structure
-      return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
+      // Return a fallback public URL structure with 'public/' prefix
+      return `https://${env.AWS_S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/public/${key}`;
     }
   }
 
